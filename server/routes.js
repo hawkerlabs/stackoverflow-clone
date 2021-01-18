@@ -26,11 +26,16 @@ const { listPopulerTags, searchTags, listTags } = require('./controllers/tags');
 const { upvote, downvote, unvote } = require('./controllers/votes');
 const { loadComments, validate, createComment, removeComment } = require('./controllers/comments');
 
+
+
+
 const requireAuth = require('./middlewares/requireAuth');
 const questionAuth = require('./middlewares/questionAuth');
 const commentAuth = require('./middlewares/commentAuth');
 const answerAuth = require('./middlewares/answerAuth');
 
+const paginated = require('./middlewares/paginated');
+const Question = require("./models/question");
 const router = require('express').Router();
 
 //authentication
@@ -46,7 +51,7 @@ router.get('/user/:username', find);
 router.param('question', loadQuestions);
 router.post('/questions', [requireAuth, questionValidate], createQuestion);
 router.get('/question/:question', show);
-router.get('/question', listQuestions);
+router.get('/question', [paginated(Question, "questions")], listQuestions);
 router.get('/questions/:tags', listByTags);
 router.get('/question/user/:username', listByUser);
 router.delete('/question/:question', [requireAuth, questionAuth], removeQuestion);

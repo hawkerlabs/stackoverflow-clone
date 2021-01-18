@@ -52,9 +52,11 @@ exports.show = async (req, res, next) => {
 
 exports.listQuestions = async (req, res, next) => {
   try {
-    const { sortType = '-score' } = req.body;
-    const questions = await Question.find().sort(sortType);
-    res.json(questions);
+    // const { sortType = '-score' } = req.body;
+    // const questions = await Question.find().sort(sortType);
+    // res.json(questions);
+    res.status(200).json(res.paginated);
+
   } catch (error) {
     next(error);
   }
