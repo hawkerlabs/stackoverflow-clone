@@ -8,20 +8,38 @@ import Layout from '../components/layout'
 import QuestionWrapper from '../components/question/question-wrapper'
 import QuestionStats from '../components/question/question-stats'
 import QuestionSummary from '../components/question/question-summary'
+import PaginationWrapper from "../components/pagination/PaginationWrapper"
 import PageTitle from '../components/page-title'
 import ButtonGroup from '../components/button-group'
 import { Spinner } from '../components/icons'
+import { isEmpty } from "../util/helpers"
 
-const HomePage = () => {
+const HomePage = ({ query }) => {
   const router = useRouter()
 
   const [questions, setQuestions] = useState(null)
+  const [pagination, setPagination] = useState(null)
+
   const [sortType, setSortType] = useState('Votes')
 
   useEffect(() => {
     const fetchQuestion = async () => {
-      const { data } = await publicFetch.get('/question')
-      setQuestions(data)
+
+      let endPoint = ""
+
+      if (!isEmpty(router.query.page) && !isEmpty(router.query.limit)) {
+        const { page, limit } = router.query
+        endPoint = `/question?page=${page}&limit=${limit}`
+      } else {
+        endPoint = '/question?page=1&limit=20'
+      }
+
+      const { data } = await publicFetch.get(endPoint)
+      setQuestions(data.results)
+      setPagination(data.pagination)
+
+
+
     }
 
     const fetchQuestionByTag = async () => {
@@ -34,7 +52,7 @@ const HomePage = () => {
     } else {
       fetchQuestion()
     }
-  }, [router.query.tag])
+  }, [router.query])
 
   const handleSorting = () => {
     switch (sortType) {
@@ -104,11 +122,16 @@ const HomePage = () => {
               >
                 {text}
               </QuestionSummary>
-            </QuestionWrapper>
+
+            </QuestionWrapper >
+
           )
         )}
+
+      {!isEmpty(pagination) && pagination.pages > 1 ? <PaginationWrapper pagination={pagination} /> : null}
     </Layout>
   )
 }
+
 
 export default HomePage

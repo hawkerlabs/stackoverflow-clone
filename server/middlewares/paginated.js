@@ -43,7 +43,7 @@ const paginated = (model, populate) => async (req, res, next) => {
     pagination.documentCount = total;
     pagination.hasNext = endIndex < total;
     pagination.hasPrev = startIndex > 0;
-
+    pagination.limit = limit;
     if (endIndex < total) {
         pagination.next = {
             page: page + 1,
