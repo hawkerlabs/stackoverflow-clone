@@ -52,6 +52,7 @@ exports.show = async (req, res, next) => {
 
 exports.listQuestions = async (req, res, next) => {
   try {
+    //TODO add the sort type later to paginated middleware
     // const { sortType = '-score' } = req.body;
     // const questions = await Question.find().sort(sortType);
     // res.json(questions);

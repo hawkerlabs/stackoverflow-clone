@@ -3,7 +3,6 @@ import styles from './pagination-wrapper.module.css'
 import { isEmpty } from "../../util/helpers"
 import Router from "next/router";
 const PaginationWrapper = ({ pagination }) => {
-    console.log("pagination", pagination)
     const { currentIndex, pages, limit, prev, next } = pagination
     let arr = Array.apply(null, Array(pages));
     let items = arr.map(function (x, i) {

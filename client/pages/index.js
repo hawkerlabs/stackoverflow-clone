@@ -14,7 +14,7 @@ import ButtonGroup from '../components/button-group'
 import { Spinner } from '../components/icons'
 import { isEmpty } from "../util/helpers"
 
-const HomePage = ({ query }) => {
+const HomePage = () => {
   const router = useRouter()
 
   const [questions, setQuestions] = useState(null)
@@ -24,14 +24,12 @@ const HomePage = ({ query }) => {
 
   useEffect(() => {
     const fetchQuestion = async () => {
-
       let endPoint = ""
-
       if (!isEmpty(router.query.page) && !isEmpty(router.query.limit)) {
         const { page, limit } = router.query
         endPoint = `/question?page=${page}&limit=${limit}`
       } else {
-        endPoint = '/question?page=1&limit=20'
+        endPoint = '/question?page=1&limit=10'
       }
 
       const { data } = await publicFetch.get(endPoint)
@@ -45,6 +43,7 @@ const HomePage = ({ query }) => {
     const fetchQuestionByTag = async () => {
       const { data } = await publicFetch.get(`/questions/${router.query.tag}`)
       setQuestions(data)
+      setPagination(null)
     }
 
     if (router.query.tag) {
@@ -52,7 +51,7 @@ const HomePage = ({ query }) => {
     } else {
       fetchQuestion()
     }
-  }, [router.query])
+  }, [router.query.page, router.query.limit, router.query.tag])
 
   const handleSorting = () => {
     switch (sortType) {
